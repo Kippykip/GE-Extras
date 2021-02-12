@@ -4,7 +4,7 @@ bl_info = {
     "name": "Genocide Engine Extras",
     "description": "Adds a submenu with really useful functions for creating .b3d models in the Genocide Engine",
     "author": "Kippykip",
-    "version": (1, 0, 0),
+    "version": (1, 1, 0),
     "blender": (2, 7, 9),
     "wiki_url": "https://github.com/Kippykip/GE-Extras",
     "tracker_url": "https://github.com/Kippykip/GE-Extras/issues",
@@ -26,6 +26,8 @@ class GE_Menu(bpy.types.Menu):
         layout.operator("ge.resetcursor")
         layout.operator("ge.flipx")
         layout.operator("ge.globaltolocal")
+        layout.operator("ge.resetpose")
+        layout.operator("ge.clearroll")
         
 #######################
 #Global Functions here#
@@ -266,6 +268,59 @@ class GE_GlobalToLocal(bpy.types.Operator):
                 pass
         GE_Alert("Updated " + str(len(sel_objs)) + " object(s)!", "GE: Global To Local")
         return {'FINISHED'}
+    
+#Simply resets the pose, makes editing keyframes easier.
+class GE_ResetPose(bpy.types.Operator):
+    """Simply resets the pose of the selected armature in Pose Mode"""
+    bl_idname = "ge.resetpose"
+    bl_label = "Reset Pose"
+
+    @classmethod
+    def poll(cls, context):
+        return context.active_object is not None
+
+    def execute(self, context):
+        if(bpy.context.active_object.type == "ARMATURE"):
+            if(bpy.context.active_object.mode == "POSE"):
+                for pbone in bpy.context.active_object.pose.bones[:]:
+                        #Reset rotation to 0
+                        pbone.rotation_quaternion[1] = 0
+                        pbone.rotation_quaternion[2] = 0
+                        pbone.rotation_quaternion[3] = 0
+                        #Reset coordinates to 0 too
+                        pbone.location[0] = 0
+                        pbone.location[1] = 0
+                        pbone.location[2] = 0
+            else:
+                GE_Alert("Only for use in pose mode!", "GE: Reset Pose", "ERROR")
+        else:
+            GE_Alert("Object must be an ARMATURE!", "GE: Reset Pose", "ERROR")
+
+        return {'FINISHED'}
+
+#Goes through each bone in an armature and resets its roll to 0.
+#Should be done before you start animating, or things can be wacky
+class GE_ClearRoll(bpy.types.Operator):
+    """Sets each bone roll in an armature to 0.0"""
+    bl_idname = "ge.clearroll"
+    bl_label = "Clear Armature Roll"
+
+    @classmethod
+    def poll(cls, context):
+        return context.active_object is not None
+
+    def execute(self, context):
+        if(bpy.context.active_object.type == "ARMATURE"):
+            bpy.ops.object.select_all(action='DESELECT')
+            bpy.ops.object.mode_set(mode='EDIT')
+            bpy.ops.armature.select_all(action='SELECT')
+            bpy.ops.armature.roll_clear(roll=0.0)
+            GE_Alert("Modified '" + bpy.context.active_object.name + "' to have 0.0 roll on all its bones!", "GE: Clear Armature Roll")
+        else:
+            GE_Alert("Object must be an ARMATURE!", "GE: Clear Armature Roll", "ERROR")
+
+        return {'FINISHED'}
+
 
 #Final Touches to GE Extras
 def register():
@@ -278,6 +333,8 @@ def register():
     bpy.utils.register_class(GE_ResetCursor)
     bpy.utils.register_class(GE_FlipX)
     bpy.utils.register_class(GE_GlobalToLocal)    
+    bpy.utils.register_class(GE_ResetPose)
+    bpy.utils.register_class(GE_ClearRoll)
 
 def unregister():
     # Main Header
@@ -289,6 +346,8 @@ def unregister():
     bpy.utils.unregister_class(GE_ResetCursor)
     bpy.utils.unregister_class(GE_FlipX)
     bpy.utils.unregister_class(GE_GlobalToLocal)
+    bpy.utils.unregister_class(GE_ResetPose)
+    bpy.utils.unregister_class(GE_ClearRoll)
 
 if __name__ == "__main__":
     register()

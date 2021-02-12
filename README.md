@@ -19,6 +19,17 @@ Exporting a .b3d mesh with multiple different global coordinates can easily resu
   - This also fixes all the wrong XYZ transformation positions for all animated keyframes if a scaled armature is involved.  
   - Currently doesn't support rotating the local coordinates for *armatures* however, as it breaks the animation in very wacky ways. Thankfully however, the B3D Exporter seems to handle rotated armatures in their global coordinates anyway.  
 Scaling and translating within armatures are properly handled though and work fine.  
+* Reset Pose  
+  - Simply resets the pose of the selected armature in Pose Mode. Handy for resetting your character back to a T-Pose in one click!  
+* Clear Armature Roll  
+  - Goes through each bone in an armature and resets its roll to 0. Ideally this should be done to your armature before you start animating, or things can be wacky later.
+  
+**Changelog:**   
+> Version 1.1.0  
+* Added "Reset Pose"  
+* Added "Clear Armature Roll"  
+> Version 1.0.0 
+* Initial Release    
   
 **Installation:**  
 In your Blender 2.79b or Bforartists application, follow these steps.  
