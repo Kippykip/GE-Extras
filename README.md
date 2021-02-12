@@ -1,7 +1,7 @@
 # Genocide Engine Extras Toolbar for Blender 2.79 & Bforartists 1.0.0
 Here's a little addon that adds some useful buttons for creating .b3d models for the Genocide Engine (and possibly other Blitz3D/OpenB3D projects).  
 Intended to be used along with the [B3DExport](https://github.com/Kippykip/B3DExport/) plugin.  
-![Genocide Engine Extras Submenus](https://i.imgur.com/H9xh3B0.png)  
+![Genocide Engine Extras Submenus](https://i.imgur.com/FJdOhkO.png)  
   
 This menu adds the following:  
 * Translate mesh from 3D Cursor  
